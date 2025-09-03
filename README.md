@@ -1,73 +1,324 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# 🛒 E-Commerce API - NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Una API REST robusta y escalable para e-commerce construida con **NestJS**, **TypeORM** y **PostgreSQL**. Implementa autenticación JWT, sistema de roles, validaciones avanzadas y gestión completa de productos, usuarios y órdenes.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Características Principales
 
-## Description
+- ✅ **Arquitectura Modular** con NestJS
+- 🔐 **Autenticación JWT** con sistema de roles
+- 📊 **Base de Datos PostgreSQL** con TypeORM
+- 🛡️ **Validaciones Robustas** con class-validator
+- 📁 **Gestión de Archivos** con Cloudinary
+- 📚 **Documentación Automática** con Swagger
+- 🔒 **Guards de Autenticación y Autorización**
+- 🔄 **Migraciones de Base de Datos**
+- 📄 **Paginación** en consultas
+- 🌱 **Seeder de Datos** desde archivo JSON
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🛠️ Stack Tecnológico
 
-## Installation
+| Tecnología | Versión | Propósito |
+|------------|---------|-----------|
+| **NestJS** | 10.0 | Framework backend modular |
+| **TypeScript** | 5.1.3 | Tipado estático |
+| **TypeORM** | 0.3.20 | ORM para base de datos |
+| **PostgreSQL** | - | Base de datos relacional |
+| **JWT** | 10.2.0 | Autenticación stateless |
+| **bcrypt** | 5.1.1 | Hash de contraseñas |
+| **Cloudinary** | 2.4.0 | Gestión de imágenes |
+| **class-validator** | 0.14.1 | Validación de DTOs |
+| **Swagger** | 7.4.0 | Documentación de API |
 
-```bash
-$ npm install
+## 📋 Modelo de Datos
+
+### 👤 **Users**
+```typescript
+{
+  id: UUID (PK)
+  name: string (max 50)
+  email: string (unique, max 50)
+  password: string (hashed, max 120)
+  phone: number
+  country: string (max 50)
+  address: text
+  city: string (max 50)
+  isAdmin: boolean (default: false)
+  orders: Orders[] (relación 1:N)
+}
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+### 📦 **Products**
+```typescript
+{
+  id: UUID (PK)
+  name: string (unique, max 50)
+  description: text
+  price: decimal (10,2)
+  stock: number
+  imgUrl: text (default placeholder)
+  category: Categories (relación N:1)
+  orderDetails: OrderDetails[] (relación N:N)
+}
 ```
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+### 🏷️ **Categories**
+```typescript
+{
+  id: UUID (PK)
+  name: string (unique, max 50)
+  products: Products[] (relación 1:N)
+}
 ```
 
-## Support
+### 📋 **Orders**
+```typescript
+{
+  id: UUID (PK)
+  date: Date
+  user: Users (relación N:1)
+  orderDetails: OrderDetails (relación 1:1)
+}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 📊 **OrderDetails**
+```typescript
+{
+  id: UUID (PK)
+  price: decimal (10,2)
+  order: Orders (relación 1:1)
+  products: Products[] (relación N:N)
+}
+```
 
-## Stay in touch
+## 🔌 Endpoints de la API
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 🔐 **Autenticación** (`/auth`)
 
-## License
+| Método | Endpoint | Descripción | Autorización |
+|--------|----------|-------------|--------------|
+| `POST` | `/auth/signup` | Registro de usuario | Público |
+| `POST` | `/auth/signin` | Inicio de sesión | Público |
+| `GET` | `/auth` | Test de conexión | Público |
 
-Nest is [MIT licensed](LICENSE).
+#### Ejemplo de Registro:
+```json
+{
+  "name": "Juan Pérez",
+  "email": "juan@example.com",
+  "password": "Password123!",
+  "confirmPassword": "Password123!",
+  "phone": 123456789,
+  "country": "Chile",
+  "address": "Av. Libertador 123",
+  "city": "Santiago"
+}
+```
+
+#### Ejemplo de Login:
+```json
+{
+  "email": "juan@example.com",
+  "password": "Password123!"
+}
+```
+
+### 📦 **Productos** (`/products`)
+
+| Método | Endpoint | Descripción | Autorización |
+|--------|----------|-------------|--------------|
+| `GET` | `/products?page=1&limit=5` | Lista productos con paginación | Público |
+| `GET` | `/products/:id` | Obtener producto por ID | Público |
+| `GET` | `/products/seeder` | Cargar productos desde JSON | Público |
+| `PUT` | `/products/:id` | Actualizar producto | Admin + JWT |
+
+## 🔒 Sistema de Seguridad
+
+### **Validaciones Implementadas:**
+
+- **Contraseña Segura**: Mínimo 8 caracteres, mayúsculas, minúsculas, números y símbolos
+- **Email Único**: Verificación en base de datos
+- **Confirmación de Contraseña**: Decorador personalizado `@MatchPassword`
+- **Validación de Campos**: Longitud mínima/máxima, tipos de datos
+- **UUIDs**: Identificadores únicos seguros
+
+### **Autenticación JWT:**
+
+- **Payload**: `{ id, email, isAdmin }`
+- **Expiración**: 1 hora
+- **Algoritmo**: HS256
+- **Guards**: AuthGuard y RolesGuard implementados
+
+### **Sistema de Roles:**
+
+- **Usuario Regular**: Acceso a endpoints públicos
+- **Administrador**: Acceso completo a gestión de productos
+
+## ⚙️ Configuración e Instalación
+
+### **Requisitos Previos:**
+- Node.js 18+
+- PostgreSQL
+- Cuenta en Cloudinary (opcional)
+
+### **Variables de Entorno (.env):**
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_password
+DB_NAME=ecomerce_db
+JWT_SECRET=tu_jwt_secret_muy_seguro
+CLOUDINARY_CLOUD_NAME=tu_cloud_name
+CLOUDINARY_API_KEY=tu_api_key
+CLOUDINARY_API_SECRET=tu_api_secret
+```
+
+### **Instalación:**
+```bash
+# Clonar repositorio
+git clone https://github.com/ErickNoguera/Ecomerce-ErickNoguera.git
+cd Ecomerce-ErickNoguera/back
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con tus credenciales
+
+# Ejecutar migraciones
+npm run migration:run
+
+# Iniciar en desarrollo
+npm run start:dev
+
+# Iniciar en producción
+npm run build
+npm run start:prod
+```
+
+## 📚 Documentación API
+
+Una vez levantado el servidor, accede a la documentación interactiva de Swagger:
+
+**URL**: `http://localhost:3000/api`
+
+La documentación incluye:
+- Esquemas de todos los DTOs
+- Ejemplos de requests/responses
+- Códigos de estado HTTP
+- Headers de autorización requeridos
+
+## 🧪 Testing
+
+```bash
+# Tests unitarios
+npm run test
+
+# Tests con coverage
+npm run test:cov
+
+# Tests e2e
+npm run test:e2e
+
+# Tests en modo watch
+npm run test:watch
+```
+
+## 📁 Estructura del Proyecto
+
+```
+Ecomerce-ErickNoguera/
+├── src/                 # Código fuente
+│   ├── auth/            # Módulo de autenticación
+│   │   ├── guards/      # Guards de seguridad
+│   │   ├── auth.controller.ts
+│   │   ├── auth.service.ts
+│   │   └── auth.module.ts
+│   ├── users/           # Módulo de usuarios
+│   │   ├── users.repository.ts
+│   │   ├── user.dto.ts
+│   │   └── roles.enum.ts
+│   ├── products/        # Módulo de productos
+│   │   ├── products.controller.ts
+│   │   ├── products.service.ts
+│   │   ├── products.repository.ts
+│   │   └── products.module.ts
+│   ├── categories/      # Módulo de categorías
+│   ├── orders/         # Módulo de órdenes
+│   ├── file-upload/    # Módulo de archivos
+│   ├── entities/       # Entidades TypeORM
+│   │   ├── users.entity.ts
+│   │   ├── products.entity.ts
+│   │   ├── orders.entity.ts
+│   │   ├── categories.entity.ts
+│   │   └── orderDetails.entity.ts
+│   ├── decorators/     # Decoradores personalizados
+│   │   ├── roles.decorator.ts
+│   │   └── matchPassword.decorator.ts
+│   ├── config/         # Configuraciones
+│   │   └── typeorm.ts
+│   ├── middlewares/    # Middlewares
+│   │   └── loggerGlobal.ts
+│   ├── utils/          # Utilidades y seeds
+│   │   └── archivo.json
+│   ├── app.module.ts   # Módulo principal
+│   └── main.ts        # Punto de entrada
+├── dist/              # Código compilado
+├── node_modules/      # Dependencias
+├── test/             # Tests e2e
+├── .env              # Variables de entorno
+├── package.json      # Configuración del proyecto
+├── tsconfig.json     # Configuración TypeScript
+└── README.md         # Documentación
+```
+
+## 🚀 Características Avanzadas
+
+### **Seeder de Datos:**
+El endpoint `/products/seeder` carga productos desde `utils/archivo.json` utilizando `upsert` para evitar duplicados.
+
+### **Paginación Implementada:**
+```typescript
+GET /products?page=1&limit=5
+// Retorna productos de la página especificada
+```
+
+### **Decorador Personalizado:**
+```typescript
+@Validate(MatchPassword, ['password'])
+confirmPassword: string;
+// Valida que confirmPassword coincida con password
+```
+
+### **Repository Pattern:**
+Separación clara entre controladores, servicios y repositorios para mejor mantenibilidad.
+
+### **Middleware de Logging:**
+Sistema personalizado de logging para todas las requests.
+
+## 👨‍💻 Desarrollado por
+
+**Erick Noguera**
+- GitHub: [@ErickNoguera](https://github.com/ErickNoguera)
+- LinkedIn: [Tu perfil de LinkedIn]
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Para cambios importantes, abre primero un issue para discutir qué te gustaría cambiar.
+
+1. Fork el proyecto
+2. Crea tu feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la branch (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+---
+
+**⭐ Si este proyecto te resultó útil, no olvides darle una estrella!**
