@@ -1,0 +1,56 @@
+Table Profile_User {
+  id_Profile_User uuid [primary key]
+  dni integer
+  name varchar
+  lastname varchar
+  phone integer
+  email varchar
+  country varchar
+  address text
+  city varchar
+}
+
+Table User {
+id_User uuid [primary key]
+id_Profile_User uuid
+username varchar
+password varchar
+isAdmin boolean
+}
+
+Table Products {
+  id_Product num [primary key]
+  name varchar
+  unit_Price decimal
+  description text
+  image varchar
+  stock integer
+  date_entry date 
+}
+
+Table purchase_Order {
+  id_Purchase_Order num [primary key]
+  shippin_address varchar
+  date date
+  order_Status enum
+  total decimal
+  id_User integer
+}
+
+Table purchse_Details {
+  id_Purchase_Detail uuid [primary key]
+  id_Purchase_Order integer
+  id_Products uuid
+  quantity integer
+  subtotal decimal
+  discount decimal
+  shipping_Costs decimal
+}
+
+Ref: User.id_Profile_User- Profile_User.id_Profile_User // OnetoOne
+
+Ref: purchase_Order.id_User> User.id_User //OnetoMany
+
+Ref: purchse_Details.id_Purchase_Order> purchase_Order.id_Purchase_Order //OnetoMany
+
+Ref: purchse_Details.id_Products> Products.id_Product //ManytoOne
