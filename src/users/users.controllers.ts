@@ -14,8 +14,12 @@ import { AuthGuard } from 'src/auth/guards/auth-guard.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from './roles.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 
+@ApiTags(`users`)
 @Controller('Users')
+@ApiBearerAuth()
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
@@ -35,8 +39,12 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiBody({ type: UpdateUserDto })
   @UseGuards(AuthGuard)
-  updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() user) {
+  updateUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() user: UpdateUserDto,
+  ) {
     return this.userService.updateUser(id, user);
   }
 

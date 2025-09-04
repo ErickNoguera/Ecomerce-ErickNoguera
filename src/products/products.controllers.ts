@@ -12,7 +12,11 @@ import { AuthGuard } from 'src/auth/guards/auth-guard.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/users/roles.enum';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { Products } from 'src/entities/products.entity';
+import { CreateProductDto } from './product.dto';
 
+@ApiTags(`products`)
 @Controller('products')
 export class ProductsControllers {
   constructor(private readonly productsService: ProductsService) {}
@@ -37,6 +41,8 @@ export class ProductsControllers {
   }
 
   @Put(':id')
+  @ApiBody({ type: CreateProductDto })
+  @ApiBearerAuth()
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   updateProduct(@Param('id') id: string, @Body() product) {

@@ -2,7 +2,10 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './orders.dto';
 import { AuthGuard } from 'src/auth/guards/auth-guard.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags(`orders`)
+@ApiBearerAuth()
 @Controller('orders')
 @UseGuards(AuthGuard)
 export class OrdersController {

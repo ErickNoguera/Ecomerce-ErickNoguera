@@ -9,14 +9,20 @@ import {
 } from 'typeorm';
 import { Products } from './products.entity';
 import { Orders } from './orders.entity';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 @Entity({
   name: `orderdetails`,
 })
 export class OrderDetails {
+  @ApiHideProperty()
   @PrimaryGeneratedColumn(`uuid`)
   id: string;
 
+  /**
+   * Debe ser un valor decimal entre 0.01 y  99999999.99
+   * @example "99.99"
+   */
   @Column({
     type: `decimal`,
     precision: 10,
