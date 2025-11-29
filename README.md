@@ -301,13 +301,10 @@ Sistema personalizado de logging para todas las requests.
 
 **Erick Noguera**
 - GitHub: [@ErickNoguera](https://github.com/ErickNoguera)
-- LinkedIn: [Tu perfil de LinkedIn]
+- LinkedIn: www.linkedin.com/in/erickyosethnogueraolaizola
 
 ---
 
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
 
 ## 🤝 Contribuciones
 
